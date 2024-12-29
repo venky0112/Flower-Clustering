@@ -1,6 +1,6 @@
 # Flower Clustering Using K-Means
 
-This repository demonstrates how to perform clustering on flower datasets using the K-Means algorithm. The project includes data preprocessing, clustering implementation, and visualization of the clustering results.
+This repository demonstrates how to perform clustering on the Iris dataset using the K-Means algorithm. The project includes data preprocessing, clustering implementation, and visualization of the clustering results.
 
 ## Table of Contents
 
@@ -13,7 +13,7 @@ This repository demonstrates how to perform clustering on flower datasets using 
 
 ## Overview
 
-Clustering is an unsupervised learning technique used to group similar data points. This project focuses on clustering flower data using the K-Means algorithm, a popular clustering method.
+Clustering is an unsupervised learning technique used to group similar data points. This project focuses on clustering the famous Iris dataset using the K-Means algorithm, a popular clustering method.
 
 ## Installation
 
@@ -48,30 +48,30 @@ Below are detailed explanations of the code snippets used in the implementation:
 ### **Data Preprocessing**
 
 ```python
-import pandas as pd
-import numpy as np
+import seaborn as sns
 from sklearn.preprocessing import StandardScaler
+from sklearn.datasets import load_iris
+import pandas as pd
 
-# Load the dataset
-data = pd.read_csv('flowers.csv')
+# Load the Iris dataset
+data = load_iris()
+df = pd.DataFrame(data.data, columns=data.feature_names)
+df['species'] = data.target
 
-# Feature scaling
+# Standardize the data
 scaler = StandardScaler()
-scaled_data = scaler.fit_transform(data)
+scaled_data = scaler.fit_transform(df.iloc[:, :-1])
 ```
 
 **Explanation:**
 
-1. **Importing Libraries:**
-   - `pandas` is used for data manipulation and loading the dataset.
-   - `numpy` provides efficient numerical computations.
-   - `StandardScaler` from `sklearn.preprocessing` ensures that features have zero mean and unit variance, which is crucial for K-Means clustering.
+1. **Loading the Iris Dataset:**
+   - `load_iris` loads the Iris dataset, which includes measurements of petal and sepal lengths and widths for three flower species.
+   - A DataFrame is created with the feature values and species labels.
 
-2. **Loading the Dataset:**
-   - `flowers.csv` is loaded into a DataFrame. It is assumed that the dataset contains numerical features for clustering.
-
-3. **Feature Scaling:**
-   - The `StandardScaler` is used to scale the features to a standard normal distribution, preventing any single feature from dominating the clustering process.
+2. **Standardizing Features:**
+   - Standardizing ensures that features are on the same scale, which is important for distance-based algorithms like K-Means.
+   - `StandardScaler` transforms the features to have zero mean and unit variance.
 
 ---
 
@@ -99,13 +99,11 @@ plt.show()
 
 **Explanation:**
 
-1. **What is Inertia?**
-   - `Inertia` measures how well the clusters are formed. It is the sum of squared distances between data points and their respective cluster centroids.
+1. **Inertia:**
+   - `Inertia` measures how tightly the data points are clustered around centroids. Lower values indicate better clustering.
 
 2. **Elbow Method:**
-   - The elbow method is used to find the optimal number of clusters (`k`).
-   - The range of `k` values is tested (from 1 to 10), and the corresponding `inertia` values are plotted.
-   - The "elbow point" on the plot indicates the optimal number of clusters, where the inertia sharply decreases.
+   - The elbow method helps identify the optimal number of clusters by looking for the "elbow point" in the plot, where the rate of inertia decrease slows.
 
 ---
 
@@ -121,11 +119,13 @@ labels = kmeans.labels_
 **Explanation:**
 
 1. **Choosing Number of Clusters:**
-   - Based on the elbow method, `n_clusters=3` is chosen for this example.
+   - Based on the elbow method, the number of clusters (`n_clusters=3`) is chosen.
 
-2. **Clustering Process:**
-   - The `fit` method applies the K-Means algorithm to the scaled dataset.
-   - `labels` contain the cluster assignments for each data point (e.g., `0`, `1`, `2`). These labels can be used to analyze and visualize the clusters.
+2. **Fitting the Model:**
+   - The K-Means algorithm assigns each data point to one of the three clusters based on similarity.
+
+3. **Cluster Labels:**
+   - `labels` contains the cluster assignment for each data point (e.g., cluster 0, 1, or 2).
 
 ---
 
@@ -140,7 +140,7 @@ reduced_data = pca.fit_transform(scaled_data)
 
 # Scatter plot of clusters
 plt.scatter(reduced_data[:, 0], reduced_data[:, 1], c=labels, cmap='viridis')
-plt.title('Flower Clusters')
+plt.title('Iris Flower Clusters')
 plt.xlabel('Principal Component 1')
 plt.ylabel('Principal Component 2')
 plt.show()
@@ -149,11 +149,10 @@ plt.show()
 **Explanation:**
 
 1. **Dimensionality Reduction:**
-   - PCA (Principal Component Analysis) reduces the dataset's dimensions to 2 for visualization while preserving as much variance as possible.
+   - PCA reduces the dataset to two dimensions for visualization, preserving the maximum variance.
 
 2. **Visualization:**
-   - A scatter plot is generated to visualize the clusters in two-dimensional space.
-   - The `c=labels` argument colors the points according to their cluster assignments.
+   - A scatter plot displays the clusters in a 2D space, with colors indicating cluster assignments.
 
 ---
 
@@ -161,11 +160,12 @@ plt.show()
 
 By running the notebook, you will:
 
-1. Preprocess and scale the flower dataset.
+1. Load and preprocess the Iris dataset.
 2. Determine the optimal number of clusters using the elbow method.
 3. Apply K-Means clustering and visualize the clusters in reduced dimensions.
 
 ## Contributing
 
 Contributions are welcome! If you find any bugs or have suggestions for improvements, feel free to open an issue or submit a pull request.
+
 
